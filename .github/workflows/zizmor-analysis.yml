@@ -1,0 +1,66 @@
+name: 🚨 Zizmor Analysis
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [ opened, synchronize ]
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  zizmor:
+    name: zizmor latest via PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      issues: write
+      contents: read # only needed for private repos
+      actions: read # only needed for private repos
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Run zizmor 🌈
+        run: uvx zizmor --format sarif . > results.sarif
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
+          category: zizmor
+
+      - name: Create issue for security findings
+        if: success()
+        run: |
+          # Parse the SARIF file and extract issues with severity 'error' or 'warning'
+          SECURITY_ISSUES=$(jq '.runs[].results[] | select(.level == "error" or .level == "warning")' results.sarif)
+
+          # Format the security findings to make them more readable
+          FORMATTED_ISSUES=$(echo "$SECURITY_ISSUES" | jq -r '
+            . |
+            "## Security Finding: \(.message.text)\n
+            - Rule ID: \(.ruleId)\n
+            - Severity: \(.level)\n
+            - Location: \(.locations[0].physicalLocation.artifactLocation.uri) Line \(.locations[0].physicalLocation.region.startLine), Column \(.locations[0].physicalLocation.region.startColumn)\n
+            - Snippet: \(.locations[0].physicalLocation.snippet.text)"
+          ')
+
+          # If there are any security issues, create a GitHub issue
+          if [ -n "$FORMATTED_ISSUES" ]; then
+            REPO_NAME="${GITHUB_REPOSITORY}"
+            gh issue create \
+              --repo "american-swim-team/project-tracker" \
+              --title "❗ Security Issues Found in GitHub Actions Workflows in $REPO_NAME" \
+              --body "$FORMATTED_ISSUES" \
+              --label "❗ high-priority"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -30,7 +30,10 @@
   color: "#c2e0c6"
   description: "Not urgent"
 
-- name: "🚧 new project"
+- name: "🚧 project"
   color: "#5319e7"
   description: "Placeholder or planning for a new repo or codebase"
 
+- name: "🔒 security"
+  color: "#ff0000"
+  description: "Security related issue"

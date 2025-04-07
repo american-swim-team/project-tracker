@@ -28,7 +28,8 @@ jobs:
               '[tracking]': { emoji: '📌', label: '📌 tracking' },
               '[low]': { emoji: '⏳', label: '⏳ low-priority' },
               '[high]': { emoji: '❗', label: '❗ high-priority' },
-              '[project]': { emoji: '🚧', label: '🚧 new project' }
+              '[project]': { emoji: '🚧', label: '🚧 project' },
+              '[security]': { emoji: '🔒', label: '🔒 security' }
             };
 
             for (const [tag, { emoji, label }] of Object.entries(tagToEmoji)) {
