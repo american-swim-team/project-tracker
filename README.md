@@ -19,6 +19,7 @@ We use emojis to keep things readable and minimal:
 | ❗    | `high-priority`   | Needs attention soon               |
 | ⏳    | `low-priority`    | Can wait                           |
 | 🚧    | `new project`     | Placeholder for a new codebase     |
+| 🔒    | `security`        | Security related issue             |
 
 > Labels are automatically synced using GitHub Actions. Just update `.github/labels.yml` and push.
 
