@@ -1,0 +1,22 @@
+name: 🏷️ Full Label Sync
+
+on:
+  push:
+    paths:
+      - ".github/labels.yml"
+  workflow_dispatch:
+
+jobs:
+  sync-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Sync GitHub labels (add, update, delete)
+        uses: crazy-max/ghaction-github-labeler@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          yaml-file: .github/labels.yml
+          skip-delete: false  # Set to true if you don't want it deleting old labels
+

@@ -1,0 +1,37 @@
+labels:
+  - name: "🐞 bug"
+    color: "d73a4a"
+    description: "Something is broken or not working as expected"
+
+  - name: "✨ feature"
+    color: "a2eeef"
+    description: "New functionality or behavior to be added"
+
+  - name: "🧹 cleanup"
+    color: "fef2c0"
+    description: "Code refactoring, style fixes, or removing cruft"
+
+  - name: "🔧 infra"
+    color: "cfd3d7"
+    description: "Infrastructure, deployment, monitoring"
+
+  - name: "📌 tracking"
+    color: "bfe5bf"
+    description: "Meta issue or tracker for a larger topic"
+
+  - name: "🧠 idea"
+    color: "e4e669"
+    description: "Exploratory or early-stage idea"
+
+  - name: "❗ high-priority"
+    color: "ff0000"
+    description: "Should be addressed soon"
+
+  - name: "⏳ low-priority"
+    color: "c2e0c6"
+    description: "Not urgent"
+
+  - name: "🚧 new project"
+    color: "5319e7"
+    description: "Placeholder or planning for a new repo or codebase"
+
