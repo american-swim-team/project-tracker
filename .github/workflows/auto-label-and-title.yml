@@ -18,15 +18,15 @@ jobs:
             const repo = context.repo;
 
             const tagToEmoji = {
-              '[bug]':  { emoji: '🐞', label: 'bug' },
-              '[feature]': { emoji: '✨', label: 'feature' },
-              '[cleanup]': { emoji: '🧹', label: 'cleanup' },
-              '[infra]': { emoji: '🔧', label: 'infra' },
-              '[idea]': { emoji: '🧠', label: 'idea' },
-              '[tracking]': { emoji: '📌', label: 'tracking' },
-              '[low]': { emoji: '⏳', label: 'low-priority' },
-              '[high]': { emoji: '❗', label: 'high-priority' },
-              '[project]': { emoji: '🚧', label: 'new project' }
+              '[bug]':  { emoji: '🐞', label: '🐞 bug' },
+              '[feature]': { emoji: '✨', label: '✨ feature' },
+              '[cleanup]': { emoji: '🧹', label: '🧹 cleanup' },
+              '[infra]': { emoji: '🔧', label: '🔧 infra' },
+              '[idea]': { emoji: '🧠', label: '🧠 idea' },
+              '[tracking]': { emoji: '📌', label: '📌 tracking' },
+              '[low]': { emoji: '⏳', label: '⏳ low-priority' },
+              '[high]': { emoji: '❗', label: '❗ high-priority' },
+              '[project]': { emoji: '🚧', label: '🚧 new project' }
             };
 
             for (const [tag, { emoji, label }] of Object.entries(tagToEmoji)) {

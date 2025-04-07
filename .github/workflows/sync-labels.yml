@@ -2,21 +2,27 @@ name: 🏷️ Full Label Sync
 
 on:
   push:
+    branches:
+      - 'main'
     paths:
-      - ".github/labels.yml"
+      - '.github/labels.yml'
+
   workflow_dispatch:
 
 jobs:
-  sync-labels:
+  labeler:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Sync GitHub labels (add, update, delete)
-        uses: crazy-max/ghaction-github-labeler@v4
+      - name: Run Labeler
+        uses: crazy-max/ghaction-github-labeler@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           yaml-file: .github/labels.yml
-          skip-delete: false  # Set to true if you don't want it deleting old labels
+          dry-run: ${{ github.event_name == 'pull_request' }}
 
