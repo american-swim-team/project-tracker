@@ -7,6 +7,8 @@ on:
 jobs:
   auto-label:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write  # Explicit permission to write to issues
 
     steps:
       - name: Process issue title and apply labels
