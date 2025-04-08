@@ -14,56 +14,63 @@ jobs:
     name: zizmor latest via PyPI
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
       issues: write
-      contents: read # only needed for private repos
-      actions: read # only needed for private repos
+      contents: read
+      pull-requests: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@v5
 
       - name: Run zizmor 🌈
-        run: uvx zizmor --format sarif . > results.sarif
+        run: uvx zizmor --format sarif . > zizmor.sarif
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload SARIF file
-        continue-on-error: true
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: results.sarif
-          category: zizmor
-
-      - name: Create issue for security findings
-        if: success()
+      - name: Check if SARIF file contains findings
+        id: check_sarif
         run: |
-          # Parse the SARIF file and extract issues with severity 'error' or 'warning'
-          SECURITY_ISSUES=$(jq '.runs[].results[]' results.sarif)
-
-
-          # Format the security findings to make them more readable
-          FORMATTED_ISSUES=$(echo "$SECURITY_ISSUES" | jq -r '
-            . |
-            "## Security Finding: \(.message.text)\n
-            - Rule ID: \(.ruleId)\n
-            - Severity: \(.level)\n
-            - Location: \(.locations[0].physicalLocation.artifactLocation.uri) Line \(.locations[0].physicalLocation.region.startLine), Column \(.locations[0].physicalLocation.region.startColumn)\n
-            - Snippet: \(.locations[0].physicalLocation.snippet.text)"
-          ')
-
-          # If there are any security issues, create a GitHub issue
-          if [ -n "$FORMATTED_ISSUES" ]; then
-            REPO_NAME="${GITHUB_REPOSITORY}"
-            gh issue create \
-              --repo "american-swim-team/project-tracker" \
-              --title "❗ Security Issues Found in GitHub Actions Workflows in $REPO_NAME" \
-              --body "$FORMATTED_ISSUES" \
-              --label "❗ high-priority"
+          FINDINGS_COUNT=$(jq '[.runs[].results[]] | length' zizmor.sarif)
+          echo "Findings count: $FINDINGS_COUNT"
+          if [ "$FINDINGS_COUNT" -eq 0 ]; then
+            echo "no_findings=true" >> $GITHUB_ENV
+          else
+            echo "no_findings=false" >> $GITHUB_ENV
           fi
+
+      - name: Convert SARIF to markdown
+        if: env.no_findings == 'false'
+        run: |
+          curl -L -o sarif-to-markdown https://github.com/Antvirf/go-sarif-to-markdown-table/raw/refs/heads/main/bin/sarif-to-markdown-table-linux-amd64
+          chmod +x sarif-to-markdown
+          cat zizmor.sarif | sarif-to-markdown > results.md
+
+      - name: Generate unique issue title
+        if: env.no_findings == 'false'
+        id: title
+        run: |
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "title=🔒 Zizmor GHA Report - $TIMESTAMP" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub issue in project-tracker
+        if: env.no_findings == 'false'
+        run: |
+          gh issue create \
+            --repo american-swim-team/project-tracker \
+            --title "${{ steps.title.outputs.title }}" \
+            --body-file results.md \
+            --label "🔒 security"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on PR with SARIF findings
+        if: github.event_name == 'pull_request' && env.no_findings == 'false'
+        run: |
+          gh pr comment ${{ github.event.number }} \
+            --body-file results.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
