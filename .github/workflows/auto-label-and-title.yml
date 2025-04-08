@@ -32,25 +32,23 @@ jobs:
               '[security]': { emoji: '🔒', label: '🔒 security' }
             };
 
-            for (const [tag, { emoji, label }] of Object.entries(tagToEmoji)) {
-              if (title.toLowerCase().startsWith(tag)) {
-                const newTitle = title.replace(tag, emoji).trim();
-
-                // 1. Update title
-                await github.rest.issues.update({
-                  ...repo,
-                  issue_number,
-                  title: newTitle,
-                });
-
-                // 2. Apply label
-                await github.rest.issues.addLabels({
-                  ...repo,
-                  issue_number,
-                  labels: [label],
-                });
-
-                break;
+            let newTitle = title;
+            let labels = [];
+            for (const [tag, {emoji, label}] of Object.entries(tagToEmoji)) {
+              if (title.toLowerCase().includes(tag)) {
+                newTitle = newTitle.replace(tag, emoji).trim();
+                labels.push(label)
               }
             }
 
+            await github.rest.issues.update({
+              ...repo,
+              issue_number,
+              title: newTitle,
+            })
+
+            await github.rest.issues.addLabels({
+              ...repo,
+              issue_number,
+              labels: labels,
+            })

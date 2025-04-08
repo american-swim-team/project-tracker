@@ -8,18 +8,20 @@ This repo helps keep track of what needs to be done across swim> projects — wh
 ## 🏷️ Labels
 We use emojis to keep things readable and minimal:
 
-| Emoji | Label             | Purpose                            |
-|-------|-------------------|------------------------------------|
-| 🐞    | `bug`             | Something is broken                |
-| ✨    | `feature`         | New functionality                  |
-| 🧹    | `cleanup`         | Code refactor or tidying up        |
-| 🔧    | `infra`           | DevOps, monitoring, deployment     |
-| 📌    | `tracking`        | Meta/multi-part issues             |
-| 🧠    | `idea`            | Rough idea or early concept        |
-| ❗    | `high-priority`   | Needs attention soon               |
-| ⏳    | `low-priority`    | Can wait                           |
-| 🚧    | `new project`     | Placeholder for a new codebase     |
-| 🔒    | `security`        | Security related issue             |
+| Emoji | Label             | Purpose                            | Title Tag  |
+|-------|-------------------|------------------------------------|------------|
+| 🐞    | `bug`             | Something is broken                | [bug]      |
+| ✨    | `feature`         | New functionality                  | [feature]  |
+| 🧹    | `cleanup`         | Code refactor or tidying up        | [cleanup]  |
+| 🔧    | `infra`           | DevOps, monitoring, deployment     | [infra]    |
+| 📌    | `tracking`        | Meta/multi-part issues             | [tracking] |
+| 🧠    | `idea`            | Rough idea or early concept        | [idea]     |
+| ❗    | `high-priority`   | Needs attention soon               | [high]     |
+| ⏳    | `low-priority`    | Can wait                           | [low]      |
+| 🚧    | `new project`     | Placeholder for a new codebase     | [project]  |
+| 🔒    | `security`        | Security related issue             | [security] |
+
+The labels are automatically applied. If the title of your issue is `[bug] [high] AI Traffic spawns to close to player` then `[bug] [high]` will be replaced by `🐞 ❗` and `high-priority`, `bug` labels will be applied.
 
 > Labels are automatically synced using GitHub Actions. Just update `.github/labels.yml` and push.
 
@@ -28,5 +30,5 @@ Join the swim> Discord: [discord.gg/swimserver](https://discord.gg/swimserver)
 Ping **@Romedius** in `#suggestions` for anything dev-related.
 
 ## 🧙 Contribution
-This is mainly for internal dev tracking, but if you see something worth improving or want to help out, feel free to open an issue or PR.
+This is mainly for internal dev tracking and transparency, but if you see something worth improving or want to help out, feel free to open an issue or PR.
 
