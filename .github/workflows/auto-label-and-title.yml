@@ -47,8 +47,10 @@ jobs:
               title: newTitle,
             })
 
-            await github.rest.issues.addLabels({
-              ...repo,
-              issue_number,
-              labels: labels,
-            })
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                ...repo,
+                issue_number,
+                labels: labels,
+              })
+            }

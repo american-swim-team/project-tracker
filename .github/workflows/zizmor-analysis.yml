@@ -46,7 +46,7 @@ jobs:
         run: |
           curl -L -o sarif-to-markdown https://github.com/Antvirf/go-sarif-to-markdown-table/raw/refs/heads/main/bin/sarif-to-markdown-table-linux-amd64
           chmod +x sarif-to-markdown
-          cat zizmor.sarif | sarif-to-markdown > results.md
+          cat zizmor.sarif | ./sarif-to-markdown > results.md
 
       - name: Generate unique issue title
         if: env.no_findings == 'false'
