@@ -19,9 +19,7 @@ jobs:
     name: zizmor latest via PyPI
     runs-on: ubuntu-latest
     permissions:
-      issues: write
       contents: read
-      pull-requests: write
 
     steps:
       - name: Checkout repository
