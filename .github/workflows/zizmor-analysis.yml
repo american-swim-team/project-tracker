@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: 0 0 * * *
   workflow_call:
+    secrets:
+      GH_TOKEN:
+        required: true
+      ZIZMOR_ISSUE_TOKEN:
+        required: true
 
 jobs:
   zizmor:
