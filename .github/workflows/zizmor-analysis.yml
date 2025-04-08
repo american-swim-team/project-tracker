@@ -64,13 +64,8 @@ jobs:
           gh issue create \
             --repo american-swim-team/project-tracker \
             --title "${ISSUE_TITLE}" \
-            --body-file /github/workspace/sarif.md \
+            --body-file results.md \
             --label "🔒 security"
-            - name: Comment on PR with SARIF findings
-              if: github.event_name == 'pull_request' && env.no_findings == 'false'
-              run: |
-                gh pr comment ${{ github.event.number }} \
-                  --body-file results.md
-              env:
-                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
