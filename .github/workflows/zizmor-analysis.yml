@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@v5
@@ -53,24 +55,22 @@ jobs:
         id: title
         run: |
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          echo "title=🔒 Zizmor GHA Report - $TIMESTAMP" >> $GITHUB_OUTPUT
+          ISSUE_TITLE="🔒 Zizmor GHA Report for ${GITHUB_REPOSITORY} - $TIMESTAMP"
+          echo "ISSUE_TITLE=${ISSUE_TITLE}" >> $GITHUB_ENV
 
       - name: Create GitHub issue in project-tracker
         if: env.no_findings == 'false'
         run: |
           gh issue create \
             --repo american-swim-team/project-tracker \
-            --title "${{ steps.title.outputs.title }}" \
-            --body-file results.md \
+            --title "${ISSUE_TITLE}" \
+            --body-file /github/workspace/sarif.md \
             --label "🔒 security"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Comment on PR with SARIF findings
-        if: github.event_name == 'pull_request' && env.no_findings == 'false'
-        run: |
-          gh pr comment ${{ github.event.number }} \
-            --body-file results.md
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Comment on PR with SARIF findings
+              if: github.event_name == 'pull_request' && env.no_findings == 'false'
+              run: |
+                gh pr comment ${{ github.event.number }} \
+                  --body-file results.md
+              env:
+                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
