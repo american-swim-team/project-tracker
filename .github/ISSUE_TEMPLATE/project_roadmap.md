@@ -12,8 +12,8 @@ labels: ["🚧 project"]
 
 <!-- Checkboxes for tasks to be completed -->
 
-- [] Step #1
-- [] Step #2
+- [ ] Step #1
+- [ ] Step #2
 
 ### Notes
 

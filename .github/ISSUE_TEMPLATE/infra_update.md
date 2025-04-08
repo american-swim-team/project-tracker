@@ -12,8 +12,8 @@ labels: ["🔧 infra"]
 
 <!-- What needs to be done to deploy the infra -->
 
-- [] Step #1
-- [] Step #2
+- [ ] Step #1
+- [ ] Step #2
 
 ### Impacted Services
 

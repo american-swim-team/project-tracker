@@ -12,8 +12,8 @@ labels: ["🧹 cleanup"]
 
 <!-- What needs to be done for successful refactor -->
 
-- [] Step #1
-- [] Step #2
+- [ ] Step #1
+- [ ] Step #2
 
 ### Notes
 
