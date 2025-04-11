@@ -18,6 +18,7 @@ jobs:
             const title = context.payload.issue.title;
             const issue_number = context.payload.issue.number;
             const repo = context.repo;
+            const existingLabels = context.payload.issue.labels.map(label => label.name);
 
             const tagToEmoji = {
               '[bug]':  { emoji: '🐞', label: '🐞 bug' },
@@ -38,6 +39,12 @@ jobs:
               if (title.toLowerCase().includes(tag)) {
                 newTitle = newTitle.replace(tag, emoji).trim();
                 labels.push(label)
+              }
+            }
+
+            for (const { emoji, label } of Object.values(tagToEmoji)) {
+              if (existingLabels.includes(label) && !newTitle.includes(emoji)) {
+                newTitle = `${emoji} ${newTitle}`;
               }
             }
 
