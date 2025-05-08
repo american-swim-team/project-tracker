@@ -48,10 +48,17 @@ jobs:
         run: |
           FINDINGS_COUNT=$(jq '[.runs[].results[]] | length' zizmor.sarif)
           echo "Findings count: $FINDINGS_COUNT"
+
           if [ "$FINDINGS_COUNT" -eq 0 ]; then
             echo "no_findings=true" >> $GITHUB_ENV
-          else
-            echo "no_findings=false" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          echo "no_findings=false" >> $GITHUB_ENV
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Zizmor found issues in a pull request. Failing the job."
+            exit 1
           fi
 
       - name: Convert SARIF to markdown
